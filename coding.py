@@ -12,12 +12,10 @@ def suffixes(a):
 assert prefixes('abc') == fs('a', 'ab', 'abc')
 assert suffixes('abc') == fs('c', 'bc', 'abc')
 
-words = frozenset(argv[1:])
-
 def coding(w):
-    for l, r in product(w, repeat=2):
+    for l, r in product(sorted(w, key=len, reverse=True), repeat=2):
         base = w - fs(l, r)
-        for ovl in suffixes(l) & prefixes(r):
+        for ovl in sorted(suffixes(l) & prefixes(r), key=len, reverse=True):
             if ovl == l == r:
                 continue
             if ovl == l:
@@ -27,4 +25,9 @@ def coding(w):
             return coding(base | fs(ovl, r[len(ovl):], l[:-len(ovl)]))
     return w
 
-print(coding(words))
+def main():
+    words = frozenset(argv[1:])
+    print(coding(words))
+
+if __name__ == '__main__':
+    main()
